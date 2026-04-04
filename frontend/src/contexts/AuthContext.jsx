@@ -8,9 +8,9 @@ export function AuthProvider({ children }) {
   const [loggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const token = localStorage.getItem("jwt");
-
   useEffect(() => {
+    const token = localStorage.getItem("jwt");
+
     if (!token) {
       setLoading(false);
       return;
@@ -25,11 +25,13 @@ export function AuthProvider({ children }) {
       .catch((err) => {
         console.error(err);
         localStorage.removeItem("jwt");
+        setCurrentUser(null);
+        setLoggedIn(false);
       })
       .finally(() => {
         setLoading(false);
       });
-  }, [token]);
+  }, []);
 
   const handleLogin = (user, tokenValue) => {
     localStorage.setItem("jwt", tokenValue);

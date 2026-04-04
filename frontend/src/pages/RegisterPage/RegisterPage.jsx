@@ -25,7 +25,7 @@ function RegisterPage() {
       await auth.register(formData);
       navigate("/login");
     } catch (err) {
-      setError(err);
+      setError(typeof err === "string" ? err : "Registration failed");
     }
   };
 
