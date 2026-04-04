@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import * as auth from "../services/auth";
-import { AuthContext } from "../contexts/AuthContext";
+import * as auth from "../../services/auth";
+import { AuthContext } from "../../contexts/AuthContext";
 
 function LoginPage() {
   const navigate = useNavigate();
