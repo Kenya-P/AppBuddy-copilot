@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const dotenv = reuqire("dotenv");
+const dotenv = require("dotenv");
 
 dotenv.config();
 
@@ -15,3 +15,5 @@ app.use(express.json());
 app.use("/api", userRoutes);
 
 app.use(errorHandler);
+
+module.exports = app;

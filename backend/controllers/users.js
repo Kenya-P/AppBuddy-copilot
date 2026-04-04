@@ -50,12 +50,32 @@ const login = async (req, res, next) => {
 const getCurrentUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id);
-    res.send(user);
+
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+
+    return res.send(user);
   } catch (err) {
-    next(err);
+    return next(err);
   }
 };
 
+const findUserByCredentials = async (email, password) => {
+  const user = await User.findOne({ email: email.toLowerCase() }).select("+password");
+
+  if (!user) {
+    throw new Error("Invalid email or password");
+  }
+
+  const isPasswordMatch = await bcrypt.compare(password, user.password);
+
+  if (!isPasswordMatch) {
+    throw new Error("Invalid email or password");
+  }
+
+  return user;
+}
 module.exports = {
   createUser,
   login,
