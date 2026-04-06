@@ -33,8 +33,8 @@ function LoginPage() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h1>Login</h1>
+    <form onSubmit={handleSubmit} className="login-form">
+      <h1 className="login-form__title">Login</h1>
       <input
         name="email"
         type="email"
@@ -51,8 +51,8 @@ function LoginPage() {
         onChange={handleChange}
         required
       />
-      <button type="submit">Log In</button>
-      {error && <p>{error}</p>}
+      <button type="submit" className="login-form__button">Log In</button>
+      {error && <p className="login-form__error">{error}</p>}
     </form>
   );
 }

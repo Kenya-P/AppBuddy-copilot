@@ -30,8 +30,8 @@ function RegisterPage() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h1>Register</h1>
+    <form onSubmit={handleSubmit} className="register-form">
+      <h1 className="register-form__title">Register</h1>
       <input
         name="name"
         type="text"
@@ -56,8 +56,8 @@ function RegisterPage() {
         onChange={handleChange}
         required
       />
-      <button type="submit">Create Account</button>
-      {error && <p>{error}</p>}
+      <button type="submit" className="register-form__button">Create Account</button>
+      {error && <p className="register-form__error">{error}</p>}
     </form>
   );
 }

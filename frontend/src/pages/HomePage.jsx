@@ -1,8 +1,8 @@
 function HomePage() {
   return (
-    <div>
-      <h1>AI Application Copilot</h1>
-      <p>Create tailored application materials faster.</p>
+    <div className="home-page">
+      <h1 className="home-page__title">AI Application Copilot</h1>
+      <p className="home-page__subtitle">Create tailored application materials faster.</p>
     </div>
   );
 }
