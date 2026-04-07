@@ -1,60 +1,73 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
-import * as auth from "../../services/auth.js";
-import { AuthContext } from "../../contexts/AuthContext.jsx";
+import ModalWithForm from "../ModalWithForm/ModalWithForm.jsx";
+import { useFormAndValidation } from "../../utils/useFormAndValidation.js";
 
-function LoginPage() {
-  const navigate = useNavigate();
-  const { handleLogin } = useContext(AuthContext);
+function LoginPage({ isOpen, onClose, onLogin, isLoading, onClickRegister }) {
+    const { values, handleChange, setValues, errors, isValid, resetForm } = 
+    useFormAndValidation({
+        email: '',
+        password: ''
+    });
 
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        onLogin(values);
+    };
 
-  const [error, setError] = useState("");
+    useEffect(() => {
+        if (!isOpen) {
+            resetForm();
+        }
+    }, [isOpen]);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+    return (
+        <ModalWithForm
+            buttonText={isLoading ? 'Saving...' : 'Login'}
+            title="Sign in"
+            name="login"
+            isOpen={isOpen}
+            onClose={onClose}
+            onSubmit={handleSubmit}
+            secondaryButtonText={"or Sign up"}
+            secondaryButtonAction={onClickRegister}
+        >
+            <label htmlFor="login-email" className="modal__label">
+                Email
+                <input
+                    id="login-email"
+                    name="email"
+                    type="email"
+                    className="modal__input"
+                    placeholder="Email"
+                    required
+                    onChange={handleChange}
+                    value={values.email || ''}
+                />
+                <span id="input-error" className="modal__input-error">{errors.email}</span>
+            </label>
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-
-    try {
-      const { token } = await auth.login(formData);
-      const user = await auth.getCurrentUser(token);
-      handleLogin(user, token);
-      navigate("/dashboard");
-    } catch (err) {
-      setError(typeof err === "string" ? err : "Login failed");
-    }
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="login-form">
-      <h1 className="login-form__title">Login</h1>
-      <input
-        name="email"
-        type="email"
-        placeholder="Email"
-        value={formData.email}
-        onChange={handleChange}
-        required
-      />
-      <input
-        name="password"
-        type="password"
-        placeholder="Password"
-        value={formData.password}
-        onChange={handleChange}
-        required
-      />
-      <button type="submit" className="login-form__button">Log In</button>
-      {error && <p className="login-form__error">{error}</p>}
-    </form>
-  );
+            <label htmlFor="login-password" className="modal__label">
+                Password
+                <input
+                    id="login-password"
+                    name="password"
+                    type="password"
+                    className="modal__input"
+                    placeholder="Password"
+                    required
+                    minLength="8"
+                    maxLength="20"
+                    title="Password must be at least 8 characters and include uppercase, lowercase, number, and special character."
+                    autoComplete="off"
+                    autoCorrect="off"
+                    onChange={handleChange}
+                    value={values.password || ''}
+                />
+                <span id="input-error" className="modal__input-error">{errors.password}</span>
+            </label>
+        </ModalWithForm>
+    );
 }
 
 export default LoginPage;
