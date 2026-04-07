@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import { AuthContext } from "./contexts/AuthContext.jsx";
+import "./App.css";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import LoginPage from "./pages/LoginPage/LoginPage.jsx";
@@ -12,15 +13,15 @@ function App() {
 
   return (
     <div>
-      <nav>
-        <Link to="/">Home</Link>{" "}
+      <nav className="nav-bar">
+        <Link className="nav-bar__link" to="/">Home</Link>{" "}
         {!loggedIn ? (
-          <>
-            <Link to="/login">Login</Link>{" "}
-            <Link to="/register">Register</Link>
-          </>
+          <div className="nav-bar__auth-links">
+            <Link className="nav-bar__link" to="/login">Login</Link>{" "}
+            <Link className="nav-bar__link" to="/register">Register</Link>
+          </div>
         ) : (
-          <button onClick={handleLogout}>Logout</button>
+          <button className="nav-bar__button" onClick={handleLogout}>Logout</button>
         )}
       </nav>
 
