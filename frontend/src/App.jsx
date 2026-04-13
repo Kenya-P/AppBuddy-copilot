@@ -8,6 +8,7 @@ import LoginPage from "./pages/LoginPage/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage/RegisterPage.jsx";
 import DashboardPage from "./pages/DashboardPage/DashboardPage.jsx";
 import ProfilePage from "./pages/ProfilePage/ProfilePage.jsx";
+import NewApplicationPage from "./pages/NewApplicationPage/NewApplicationPage.jsx";
 import * as auth from "./services/auth.js";
 
 function App() {
@@ -55,6 +56,7 @@ function App() {
         <Link to="/">Home</Link>{" "}
         {loggedIn && <Link to="/profile">Profile</Link>}{" "}
         {loggedIn && <Link to="/dashboard">Dashboard</Link>}{" "}
+        {loggedIn && <Link to="/new-application">New Application</Link>}{" "}
         {!loggedIn ? (
           <>
             <button type="button" onClick={openLoginModal}>Login</button>
@@ -80,6 +82,14 @@ function App() {
           element={
             <ProtectedRoute loggedIn={loggedIn} loading={loading}>
               <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/new-application"
+          element={
+            <ProtectedRoute loggedIn={loggedIn} loading={loading}>
+              <NewApplicationPage />
             </ProtectedRoute>
           }
         />
