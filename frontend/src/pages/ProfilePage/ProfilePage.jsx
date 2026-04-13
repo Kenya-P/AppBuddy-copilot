@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import * as profileApi from "../services/profile";
+import * as profileApi from "../../services/profile";
 
 function ProfilePage() {
   const [formData, setFormData] = useState({
@@ -75,7 +75,7 @@ function ProfilePage() {
     };
 
     try {
-      const existingProfile = await profileApi.getMyProfile(token);
+      const existingProfile = await profileApi.getProfile(token);
 
       if (existingProfile) {
         await profileApi.updateProfile(token, payload);
