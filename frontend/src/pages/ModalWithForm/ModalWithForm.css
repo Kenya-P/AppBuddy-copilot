@@ -30,6 +30,7 @@
     right: 28px;
     background-repeat: no-repeat;
     background-position: center;
+    background-image: url("../../../public/close-btn.svg");
     height: 16px;
     width: 16px;
     border: none;
