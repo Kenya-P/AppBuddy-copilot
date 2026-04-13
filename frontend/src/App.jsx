@@ -7,6 +7,7 @@ import HomePage from "./pages/HomePage.jsx";
 import LoginPage from "./pages/LoginPage/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage/RegisterPage.jsx";
 import DashboardPage from "./pages/DashboardPage/DashboardPage.jsx";
+import ProfilePage from "./pages/ProfilePage/ProfilePage.jsx";
 import * as auth from "./services/auth.js";
 
 function App() {
@@ -50,22 +51,17 @@ function App() {
 
   return (
     <div>
-      <nav className="nav-bar">
-        <Link className="nav-bar__link" to="/">Home</Link>
-
+      <nav>
+        <Link to="/">Home</Link>{" "}
+        {loggedIn && <Link to="/profile">Profile</Link>}{" "}
+        {loggedIn && <Link to="/dashboard">Dashboard</Link>}{" "}
         {!loggedIn ? (
-          <div className="nav-bar__auth-links">
-            <button type="button" className="nav-bar__button" onClick={openLoginModal}>
-              Login
-            </button>
-            <button type="button" className="nav-bar__button" onClick={openRegisterModal}>
-              Register
-            </button>
-          </div>
+          <>
+            <button type="button" onClick={openLoginModal}>Login</button>
+            <button type="button" onClick={openRegisterModal}>Register</button>
+          </>
         ) : (
-          <button className="nav-bar__button" onClick={handleLogout}>
-            Logout
-          </button>
+          <button onClick={handleLogout}>Logout</button>
         )}
       </nav>
 
@@ -76,6 +72,14 @@ function App() {
           element={
             <ProtectedRoute loggedIn={loggedIn} loading={loading}>
               <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute loggedIn={loggedIn} loading={loading}>
+              <ProfilePage />
             </ProtectedRoute>
           }
         />
