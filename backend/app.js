@@ -6,6 +6,7 @@ dotenv.config();
 
 const userRoutes = require("./routes/users");
 const profileRoutes = require("./routes/profile")
+const aiRoutes = require("./routes/ai");
 const { errorHandler } = require("./middlewares/errorHandler");
 
 
