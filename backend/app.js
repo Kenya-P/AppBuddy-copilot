@@ -4,11 +4,16 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
+const express = require("express");
+const cors = require("cors");
+const dotenv = require("dotenv");
+
+dotenv.config();
+
 const userRoutes = require("./routes/users");
-const profileRoutes = require("./routes/profile")
+const profileRoutes = require("./routes/profile");
 const aiRoutes = require("./routes/ai");
 const { errorHandler } = require("./middlewares/errorHandler");
-
 
 const app = express();
 
@@ -17,6 +22,7 @@ app.use(express.json());
 
 app.use("/api", userRoutes);
 app.use("/api", profileRoutes);
+app.use("/api", aiRoutes);
 
 app.use(errorHandler);
 
