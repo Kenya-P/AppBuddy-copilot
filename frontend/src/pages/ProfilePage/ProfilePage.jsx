@@ -42,7 +42,7 @@ function ProfilePage() {
           github: profile.github || "",
           portfolio: profile.portfolio || "",
           summary: profile.summary || "",
-          skills: Array.isArray(profile.skills) ? profile.skills.join(", ") : "",
+          skills: Array.isArray(strongestSkills) ? strongestSkills.join(", ") : "",
         });
       })
       .catch((err) => {

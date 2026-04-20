@@ -52,18 +52,18 @@ function App() {
 
   return (
     <div>
-      <nav>
-        <Link to="/">Home</Link>{" "}
-        {loggedIn && <Link to="/profile">Profile</Link>}{" "}
-        {loggedIn && <Link to="/dashboard">Dashboard</Link>}{" "}
-        {loggedIn && <Link to="/new-application">New Application</Link>}{" "}
+      <nav className="nav-bar">
+        <Link className="nav-bar__auth-links" to="/">Home</Link>{" "}
+        {loggedIn && <Link className="nav-bar__auth-links" to="/profile">Profile</Link>}{" "}
+        {loggedIn && <Link className="nav-bar__auth-links" to="/dashboard">Dashboard</Link>}{" "}
+        {loggedIn && <Link className="nav-bar__auth-links" to="/new-application">New Application</Link>}{" "}
         {!loggedIn ? (
-          <>
-            <button type="button" onClick={openLoginModal}>Login</button>
+          <div className="nav-bar__button">
+            <button  type="button" onClick={openLoginModal}>Login</button>
             <button type="button" onClick={openRegisterModal}>Register</button>
-          </>
+          </div>
         ) : (
-          <button onClick={handleLogout}>Logout</button>
+          <button className="nav-bar__button" onClick={handleLogout}>Logout</button>
         )}
       </nav>
 

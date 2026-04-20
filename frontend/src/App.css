@@ -24,16 +24,13 @@
 }
 
 .nav-bar__button {
+  display: flex;
+  flex: auto;
+  flex-direction: row-reverse;
   background: none;
   border: none;
-  color: var(--accent);
   cursor: pointer;
   font-size: 1rem;
-  padding: 8px 12px;
-  border-radius: 4px;
   transition: background 0.3s;
 
-  &:hover {
-    background: var(--accent-bg);
-  }
 }
