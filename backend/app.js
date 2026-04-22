@@ -17,6 +17,7 @@ app.use(express.json());
 
 app.use("/api", userRoutes);
 app.use("/api", profileRoutes);
+app.use("/api", aiRoutes)
 
 app.use(errorHandler);
 
