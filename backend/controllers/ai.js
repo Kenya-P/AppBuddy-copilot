@@ -1,4 +1,4 @@
-const Profile = require("../models/Profile.js");
+const Profile = require("../models/Profile");
 
 const generateApplication = async (req, res, next) => {
   try {
@@ -19,6 +19,11 @@ const generateApplication = async (req, res, next) => {
       profile.summary ||
       "I bring a strong willingness to learn, collaborate, and contribute effectively.";
     const fullName = profile.fullName || "Applicant";
+
+    const extractKeywords = (text = "") => {
+      const words = text.toLowerCase().split(/\W+/);
+      return [...new Set(words)].slice(0,5);
+    };
 
     const coverLetter = `Dear Hiring Manager,
 
