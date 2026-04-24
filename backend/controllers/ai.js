@@ -87,6 +87,30 @@ Return JSON only.
       },
     });
 
+const prompt = `
+You are an expert career assistant helping a junior software engineer create tailored job application materials.
+
+USER PROFILE:
+${JSON.stringify(userProfile, null, 2)}
+
+JOB DESCRIPTION:
+${jobDescription}
+
+INSTRUCTIONS:
+- Use ONLY the user's real experience and skills
+- Do NOT invent companies, roles, or achievements
+- Make the writing sound confident, human, and specific
+- Tailor language to match the job description tone
+- Keep the cover letter concise (under 200 words)
+
+OUTPUT:
+Return JSON with:
+- coverLetter
+- answers (3 questions)
+- matchedKeywords (5 relevant terms from job description)
+`;
+
+
     const parsed = JSON.parse(response.output_text);
 
     return res.send(parsed);
