@@ -1,11 +1,26 @@
-const Profile = require("../models/Profile");
+const OpenAI = require("openai");
+const Profile = require("../models/Profile.js");
+
+if (!process.env.OPENAI_API_KEY) {
+  console.warn("Missing OPENAI_API_KEY in backend/.env");
+}
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 const generateApplication = async (req, res, next) => {
   try {
-    const { jobDescription } = req.body;
+    const { jobDescription } = req.body || {};
 
     if (!jobDescription || !jobDescription.trim()) {
       return res.status(400).send({ message: "Job description is required" });
+    }
+
+    if (!process.env.OPENAI_API_KEY) {
+      return res.status(500).send({
+        message: "OpenAI API key is missing. Add OPENAI_API_KEY to backend/.env and restart the server.",
+      });
     }
 
     const profile = await Profile.findOne({ userId: req.user._id });
@@ -14,55 +29,83 @@ const generateApplication = async (req, res, next) => {
       return res.status(404).send({ message: "Profile not found" });
     }
 
-    const skills = Array.isArray(profile.skills) ? profile.skills : [];
-    const summary =
-      profile.summary ||
-      "I bring a strong willingness to learn, collaborate, and contribute effectively.";
-    const fullName = profile.fullName || "Applicant";
-
-    const extractKeywords = (text = "") => {
-      const words = text.toLowerCase().split(/\W+/);
-      return [...new Set(words)].slice(0,5);
+    const userProfile = {
+      fullName: profile.fullName || "Not provided",
+      email: profile.email || "Not provided",
+      location: profile.location || "Not provided",
+      linkedin: profile.linkedin || "Not provided",
+      github: profile.github || "Not provided",
+      portfolio: profile.portfolio || "Not provided",
+      summary: profile.summary || "Not provided",
+      skills: Array.isArray(profile.skills) ? profile.skills : [],
     };
 
-    const coverLetter = `Dear Hiring Manager,
+    const response = await openai.responses.create({
+      model: "gpt-4.1-mini",
+      instructions:
+        "You are a professional career application assistant. Create accurate, tailored, non-fabricated application materials. Only use facts provided in the user profile. Do not invent experience, employers, degrees, certifications, or skills.",
+      input: `
+USER PROFILE:
+${JSON.stringify(userProfile, null, 2)}
 
-I am excited to apply for this opportunity. My background in ${
-      skills.length ? skills.join(", ") : "software development"
-    } makes this role especially appealing to me.
+JOB DESCRIPTION:
+${jobDescription}
 
-${summary}
-
-Thank you for your time and consideration.
-
-Sincerely,
-${fullName}`;
-
-    const answers = [
-      {
-        question: "Why are you interested in this role?",
-        answer:
-          "I am interested in this role because it aligns with my skills and gives me the opportunity to continue growing professionally.",
+Create a concise tailored cover letter and three common application answers.
+Return JSON only.
+`,
+      text: {
+        format: {
+          type: "json_schema",
+          name: "application_materials",
+          schema: {
+            type: "object",
+            additionalProperties: false,
+            properties: {
+              coverLetter: { type: "string" },
+              answers: {
+                type: "array",
+                items: {
+                  type: "object",
+                  additionalProperties: false,
+                  properties: {
+                    question: { type: "string" },
+                    answer: { type: "string" },
+                  },
+                  required: ["question", "answer"],
+                },
+              },
+              matchedKeywords: {
+                type: "array",
+                items: { type: "string" },
+              },
+            },
+            required: ["coverLetter", "answers", "matchedKeywords"],
+          },
+          strict: true,
+        },
       },
-      {
-        question: "Why are you a good fit?",
-        answer: `I believe I am a strong fit because of my experience with ${
-          skills.length ? skills.join(", ") : "relevant technical skills"
-        } and my ability to adapt and contribute thoughtfully.`,
-      },
-      {
-        question: "What strength would you bring to the team?",
-        answer:
-          "I would bring adaptability, strong communication, and a willingness to learn while delivering dependable work.",
-      },
-    ];
-
-    return res.send({
-      coverLetter,
-      answers,
     });
+
+    const parsed = JSON.parse(response.output_text);
+
+    return res.send(parsed);
   } catch (err) {
     console.error("generateApplication error:", err);
+
+    if (err.code === "invalid_api_key") {
+      return res.status(401).send({
+        message: "Invalid OpenAI API key. Check backend/.env and restart the server.",
+      });
+    }
+
+    if (err.status === 429) {
+      return res.status(429).send({
+        message: "OpenAI rate limit or quota issue. Check your API billing/usage.",
+        deatils: err.error?.message || err.message,
+      });
+    }
+
     return next(err);
   }
 };
