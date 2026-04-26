@@ -1,13 +1,9 @@
 const OpenAI = require("openai");
-const Profile = require("../models/Profile.js");
+const Profile = require("../models/Profile");
 
 if (!process.env.OPENAI_API_KEY) {
   console.warn("Missing OPENAI_API_KEY in backend/.env");
 }
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
 
 const generateApplication = async (req, res, next) => {
   try {
@@ -22,6 +18,10 @@ const generateApplication = async (req, res, next) => {
         message: "OpenAI API key is missing. Add OPENAI_API_KEY to backend/.env and restart the server.",
       });
     }
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
     const profile = await Profile.findOne({ userId: req.user._id });
 
