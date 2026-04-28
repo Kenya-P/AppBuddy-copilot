@@ -1,19 +1,58 @@
 const mongoose = require("mongoose");
 
-const applicationSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  jobDescription: { type: String, required: true },
-  coverLetter: { type: String, required: true },
-  answers: [
-    {
-      question: { type: String, required: true },
-      answer: { type: String, required: true },
+const answerSchema = new mongoose.Schema(
+  {
+    question: {
+      type: String,
+      required: true,
+      trim: true,
     },
-  ],
-  matchedKeywords: [{ type: String }],
-  createdAt: { type: Date, default: Date.now },
-});
+    answer: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+  },
+  { _id: false }
+);
 
-const Application = mongoose.model("Application", applicationSchema);
+const applicationSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    company: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    roleTitle: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    jobDescription: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    coverLetter: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    answers: {
+      type: [answerSchema],
+      default: [],
+    },
+    matchedKeywords: {
+      type: [String],
+      default: [],
+    },
+  },
+  { timestamps: true }
+);
 
 module.exports = mongoose.model("Application", applicationSchema);
