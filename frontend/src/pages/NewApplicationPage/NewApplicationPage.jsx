@@ -1,11 +1,18 @@
 import { useState } from "react";
 import { request } from "../../utils/api";
 
+import * as aaplicationAoi from "../../services/application.js";
+
 function NewApplicationPage() {
   const [jobDescription, setJobDescription] = useState("");
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [saveMessage, setSaveMessage] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  const [company, setCompany] = useState("");
+  const [roleTitle, setRoleTitle] = useState("");
 
   const token = localStorage.getItem("jwt");
 
@@ -33,9 +40,47 @@ function NewApplicationPage() {
     }
   };
 
+  const handleSaveDraft = async () => {
+    if (!result) return;
+
+    setSaving(true);
+    setSaveMessage("");
+
+    try {
+      await applicationApi.createApplication(token, {
+        company,
+        roleTitle,
+        jobDescription,
+        coverLetter: result.coverLetter,
+        answers: result.answers,
+        matchedKeywords: result.matchedKeywords || [],
+      });
+      setSaveMessage("Draft saved successfully!");
+    } catch (err) {
+      console.error("Save failed:", err);
+      setSaveMessage(typeof err === "string" ? err : "Failed to save draft.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <div>
       <h1>New Application</h1>
+
+      <input
+        type="text"
+        placeholder="Company Name"
+        value={company}
+        onChange={(e) => setCompany(e.target.value)}
+      />
+
+      <input
+        type="text"
+        placeholder="Role Title"
+        value={roleTitle}
+        onChange={(e) => setRoleTitle(e.target.value)}
+      />
 
       <textarea
         placeholder="Paste the job description here..."
@@ -52,6 +97,12 @@ function NewApplicationPage() {
       </button>
 
       {error && <p>{error}</p>}
+
+      <button onClick={handleSaveDraft} disabled={saving}>
+        {saving ? "Saving..." : "Save Draft"}
+      </button>
+
+      {saveMessage && <p>{saveMessage}</p>}
 
       {result && (
         <div>
