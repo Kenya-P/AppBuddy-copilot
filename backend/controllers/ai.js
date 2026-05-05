@@ -7,7 +7,16 @@ if (!process.env.OPENAI_API_KEY) {
 
 const generateApplication = async (req, res, next) => {
   try {
-    const { jobDescription } = req.body || {};
+
+    const { company, roleTitle, jobDescription } = req.body || {};
+
+    if (!company || !company.trim()) {
+      return res.status(400).send({ message: "Company name is required" });
+    }
+
+    if (!roleTitle || !roleTitle.trim()) {
+      return res.status(400).send({ message: "Role title is required" });
+    }
 
     if (!jobDescription || !jobDescription.trim()) {
       return res.status(400).send({ message: "Job description is required" });
@@ -48,8 +57,14 @@ const openai = new OpenAI({
 USER PROFILE:
 ${JSON.stringify(userProfile, null, 2)}
 
+COMPANY: 
+${company || "Not provided"}
+      
+ROLE: 
+${roleTitle || "Not provided"}
+
 JOB DESCRIPTION:
-${jobDescription}
+${jobDescription  || "Not provided"}
 
 Create a concise tailored cover letter and three common application answers.
 Return JSON only.
@@ -93,8 +108,14 @@ You are an expert career assistant helping a junior software engineer create tai
 USER PROFILE:
 ${JSON.stringify(userProfile, null, 2)}
 
+COMPANY:
+${company || "Not provided"}
+
+ROLE:
+${roleTitle || "Not provided"}
+
 JOB DESCRIPTION:
-${jobDescription}
+${jobDescription || "Not provided"}
 
 INSTRUCTIONS:
 - Use ONLY the user's real experience and skills
