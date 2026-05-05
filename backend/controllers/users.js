@@ -8,7 +8,9 @@ const createUser = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
 
-    const existingUser = await User.findOne({ email });
+    const normalizedEmail = email.toLowerCase().trim();
+
+    const existingUser = await User.findOne({ email: normalizedEmail });
     if (existingUser) {
       return res.status(409).send({ message: "User already exists" });
     }
@@ -17,7 +19,7 @@ const createUser = async (req, res, next) => {
 
     const user = await User.create({
       name,
-      email,
+      email: normalizedEmail,
       password: hashedPassword,
     });
 
@@ -61,21 +63,7 @@ const getCurrentUser = async (req, res, next) => {
   }
 };
 
-const findUserByCredentials = async (email, password) => {
-  const user = await User.findOne({ email: email.toLowerCase() }).select("+password");
 
-  if (!user) {
-    throw new Error("Invalid email or password");
-  }
-
-  const isPasswordMatch = await bcrypt.compare(password, user.password);
-
-  if (!isPasswordMatch) {
-    throw new Error("Invalid email or password");
-  }
-
-  return user;
-}
 module.exports = {
   createUser,
   login,
