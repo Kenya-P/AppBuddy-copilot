@@ -21,54 +21,82 @@ function NewApplicationPage() {
   const [roleTitle, setRoleTitle] = useState("");
   const [jobDescription, setJobDescription] = useState("");
 
+  const [customQuestions, setCustomQuestions] = useState("");
+  const [customAnswers, setCustomAnswers] = useState("");
+  const [answerLoading, setAnswerLoading] = useState(false);
+
   const token = localStorage.getItem("jwt");
 
-const generateApplication = async ({ regenerate = false } = {}) => {
-  setLoading(true);
-  setError("");
-  setSaveStatus("");
+  const generateApplication = async ({ regenerate = false } = {}) => {
+    setLoading(true);
+    setError("");
+    setSaveStatus("");
 
-  if (regenerate) {
-    setIsRegenerating(true);
-  }
+    if (regenerate) {
+      setIsRegenerating(true);
+    }
+
+    try {
+      const data = await request("/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          company,
+          roleTitle,
+          jobDescription,
+        }),
+      });
+
+      setResult(data);
+
+      const savedDraft = await applicationApi.createApplication(token, {
+        company,
+        roleTitle,
+        jobDescription,
+        coverLetter: data.coverLetter,
+        answers: data.answers,
+        matchedKeywords: data.matchedKeywords || [],
+      });
+
+      setAutoSavedAppId(savedDraft._id);
+      setSaveStatus(regenerate ? "New version auto-saved." : "Draft auto-saved.");
+    } catch (err) {
+      console.error("Generation failed:", err);
+      setError(
+        typeof err === "string"
+          ? err
+          : "Failed to generate application materials."
+      );
+    } finally {
+      setLoading(false);
+      setIsRegenerating(false);
+    }
+  };
+
+  const handleGenerateAnswer = async () => {
+  setAnswerLoading(true);
 
   try {
-    const data = await request("/generate", {
+    const data = await request("/generate-answer", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        company,
-        roleTitle,
+        question: customQuestion,
         jobDescription,
       }),
     });
 
-    setResult(data);
-
-    const savedDraft = await applicationApi.createApplication(token, {
-      company,
-      roleTitle,
-      jobDescription,
-      coverLetter: data.coverLetter,
-      answers: data.answers,
-      matchedKeywords: data.matchedKeywords || [],
-    });
-
-    setAutoSavedAppId(savedDraft._id);
-    setSaveStatus(regenerate ? "New version auto-saved." : "Draft auto-saved.");
+    setCustomAnswer(data.answer);
   } catch (err) {
-    console.error("Generation failed:", err);
-    setError(
-      typeof err === "string"
-        ? err
-        : "Failed to generate application materials."
-    );
+    console.error("Failed to generate answer:", err);
   } finally {
-    setLoading(false);
-    setIsRegenerating(false);
+    setAnswerLoading(false);
   }
 };
 

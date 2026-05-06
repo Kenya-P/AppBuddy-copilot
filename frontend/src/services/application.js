@@ -48,3 +48,4 @@ export const deleteApplication = (token, id) => {
     },
   });
 };
+
