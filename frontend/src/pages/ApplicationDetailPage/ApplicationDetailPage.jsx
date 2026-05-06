@@ -19,6 +19,20 @@ function ApplicationDetailPage() {
     answers: [],
   });
 
+  const [copyMessage, setCopyMessage] = useState("");
+
+  const copyToClipboard = async (text) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopyMessage("Copied to clipboard!");
+      setTimeout(() => setCopyMessage(""), 2000);
+    } catch (err) {
+      console.error("Copy failed:", err);
+      setCopyMessage("Failed to copy to clipboard.");
+      setTimeout(() => setCopyMessage(""), 2000);
+    }
+  };
+
   useEffect(() => {
     applicationsApi
       .getApplicationById(token, id)
@@ -101,12 +115,15 @@ return (
 
         <h2>Cover Letter</h2>
         <pre style={{ whiteSpace: "pre-wrap" }}>{application.coverLetter}</pre>
+        <button onClick={() => copyToClipboard(application.coverLetter)}>Copy Cover Letter</button>
 
         <h2>Application Answers</h2>
         {application.answers?.map((item, index) => (
           <div key={index}>
             <h3>{item.question}</h3>
             <p>{item.answer}</p>
+            
+            <button onClick={() => copyToClipboard(item.answer)}>Copy Answer</button>
           </div>
         ))}
 

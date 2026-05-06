@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { request } from "../../utils/api";
 
-import * as aaplicationAoi from "../../services/application.js";
+import * as applicationApi from "../../services/application.js";
 
 function NewApplicationPage() {
   const [jobDescription, setJobDescription] = useState("");
@@ -10,6 +10,7 @@ function NewApplicationPage() {
   const [loading, setLoading] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
   const [saving, setSaving] = useState(false);
+  const [copyMessage, setCopyMessage] = useState("");
 
   const [company, setCompany] = useState("");
   const [roleTitle, setRoleTitle] = useState("");
@@ -64,6 +65,18 @@ function NewApplicationPage() {
     }
   };
 
+  const copyToClipboard = async (text) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopyMessage("Copied to clipboard!");
+      setTimeout(() => setCopyMessage(""), 2000);
+    } catch (err) {
+      console.error("Copy failed:", err);
+      setCopyMessage("Failed to copy to clipboard.");
+      setTimeout(() => setCopyMessage(""), 2000);
+    }
+  }
+
   return (
     <div>
       <h1>New Application</h1>
@@ -111,6 +124,7 @@ function NewApplicationPage() {
 
           <h2>Cover Letter</h2>
           <pre style={{ whiteSpace: "pre-wrap" }}>{result.coverLetter}</pre>
+          <button onClick={() => copyToClipboard(result.coverLetter)}>Copy Cover Letter</button>
 
           <h2>Application Answers</h2>
           {result.answers?.map((item, index) => (
