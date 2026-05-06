@@ -1,0 +1,30 @@
+.spinner {
+  display: inline-block;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spinner-rotate 0.7s linear infinite;
+  vertical-align: middle;
+}
+
+.spinner_small {
+  width: 14px;
+  height: 14px;
+  margin-right: 8px;
+}
+
+.spinner_medium {
+  width: 24px;
+  height: 24px;
+}
+
+.spinner_large {
+  width: 40px;
+  height: 40px;
+}
+
+@keyframes spinner-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}

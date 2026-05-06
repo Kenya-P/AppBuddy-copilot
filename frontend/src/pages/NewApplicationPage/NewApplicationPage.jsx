@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { request } from "../../utils/api";
+import Spinner from "../../components/Spinner.jsx";
 
 import * as applicationApi from "../../services/application.js";
 
@@ -47,7 +48,7 @@ const generateApplication = async ({ regenerate = false } = {}) => {
 
     setResult(data);
 
-    const savedDraft = await applicationsApi.createApplication(token, {
+    const savedDraft = await applicationApi.createApplication(token, {
       company,
       roleTitle,
       jobDescription,
@@ -56,7 +57,7 @@ const generateApplication = async ({ regenerate = false } = {}) => {
       matchedKeywords: data.matchedKeywords || [],
     });
 
-    setAutoSavedApplicationId(savedDraft._id);
+    setAutoSavedAppId(savedDraft._id);
     setSaveStatus(regenerate ? "New version auto-saved." : "Draft auto-saved.");
   } catch (err) {
     console.error("Generation failed:", err);
@@ -143,14 +144,28 @@ const generateApplication = async ({ regenerate = false } = {}) => {
 
       <br />
 
-      <button onClick={handleGenerate} disabled={loading || !jobDescription.trim()}>
-        {loading ? "Generating..." : "Generate"}
+      <button
+        onClick={handleGenerate}
+        disabled={
+          loading ||
+          !company.trim() ||
+          !roleTitle.trim() ||
+          !jobDescription.trim()
+        }
+      >
+        {loading ? (
+          <>
+            <Spinner /> Generating...
+          </>
+        ) : (
+          "Generate"
+        )}
       </button>
 
       {error && <p>{error}</p>}
 
       <button onClick={handleSaveCopy} disabled={saving}>
-        {saving ? "Saving..." : "Save Draft"}
+        {saving ? <Spinner size="small" /> : "Save Draft"}
       </button>
 
       {saveMessage && <p>{saveMessage}</p>}

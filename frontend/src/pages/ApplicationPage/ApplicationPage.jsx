@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+
+import Spinner from "../../components/Spinner.jsx";
 import * as applicationsApi from "../../services/application.js";
 
 function ApplicationsPage() {
@@ -20,6 +22,9 @@ function ApplicationsPage() {
 
   return (
     <div>
+
+      {loading && <Spinner size="medium" />}
+      
       <h1>Saved Applications</h1>
 
       {applications.length === 0 ? (
