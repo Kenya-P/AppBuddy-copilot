@@ -149,4 +149,53 @@ Return valid JSON only.
   }
 };
 
+const generateCustomAnswers = async (req, res, next) => {
+  try {
+    const { question, jobDescription } = req.body || {};
+
+    if (!question?.trim()) {
+      return res.status(400).send({ message: "Question is required" });
+    }
+
+    const profile = await Profile.findOne({ userId: req.user._id });
+
+    if (!profile) {
+      return res.status(404).send({ message: "Profile not found" });
+    }
+
+    const prompt = `
+    You are an expert career assistant helping a junior software engineer create tailored job application answers.
+    
+    USER PROFILE:
+    ${JSON.stringify(profile, null, 2)}
+    
+    JOB DESCRIPTION:
+    ${jobDescription}
+    
+    QUESTION:
+    ${question}
+    
+    INSTRUCTIONS:
+    - Use ONLY the user's real profile information.
+    - Tailor the answer to the job description.
+    - Mirror important keywords from the job description naturally.
+    - Make the writing sound confident, human, specific, and professional.
+    - Keep the answer concise and professional.
+    - Do NOT fabricate details, skills, or achievements.`;
+
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+
+    const response = await openai.responses.create({
+      model: "gpt-4.1-mini",
+      input: prompt,
+    });
+
+    return res.send({ answer: response.output_text.trim() });
+  } catch (err) {
+    return next(err);    
+  }
+};
+
 module.exports = { generateApplication };
