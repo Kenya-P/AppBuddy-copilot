@@ -1,36 +1,32 @@
 const OpenAI = require("openai");
 const Profile = require("../models/Profile");
 
-if (!process.env.OPENAI_API_KEY) {
-  console.warn("Missing OPENAI_API_KEY in backend/.env");
-}
-
 const generateApplication = async (req, res, next) => {
   try {
-
     const { company, roleTitle, jobDescription } = req.body || {};
 
-    if (!company || !company.trim()) {
+    if (!company?.trim()) {
       return res.status(400).send({ message: "Company name is required" });
     }
 
-    if (!roleTitle || !roleTitle.trim()) {
+    if (!roleTitle?.trim()) {
       return res.status(400).send({ message: "Role title is required" });
     }
 
-    if (!jobDescription || !jobDescription.trim()) {
+    if (!jobDescription?.trim()) {
       return res.status(400).send({ message: "Job description is required" });
     }
 
     if (!process.env.OPENAI_API_KEY) {
       return res.status(500).send({
-        message: "OpenAI API key is missing. Add OPENAI_API_KEY to backend/.env and restart the server.",
+        message:
+          "OpenAI API key is missing. Add OPENAI_API_KEY to backend/.env and restart the server.",
       });
     }
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
 
     const profile = await Profile.findOne({ userId: req.user._id });
 
@@ -49,26 +45,40 @@ const openai = new OpenAI({
       skills: Array.isArray(profile.skills) ? profile.skills : [],
     };
 
-    const response = await openai.responses.create({
-      model: "gpt-4.1-mini",
-      instructions:
-        "You are a professional career application assistant. Create accurate, tailored, non-fabricated application materials. Only use facts provided in the user profile. Do not invent experience, employers, degrees, certifications, or skills.",
-      input: `
+    const prompt = `
+You are an expert career assistant helping a junior software engineer create tailored job application materials.
+
 USER PROFILE:
 ${JSON.stringify(userProfile, null, 2)}
 
-COMPANY: 
-${company || "Not provided"}
-      
-ROLE: 
-${roleTitle || "Not provided"}
+COMPANY:
+${company}
+
+ROLE:
+${roleTitle}
 
 JOB DESCRIPTION:
-${jobDescription  || "Not provided"}
+${jobDescription}
 
-Create a concise tailored cover letter and three common application answers.
-Return JSON only.
-`,
+INSTRUCTIONS:
+- Use ONLY the user's real profile information.
+- Do NOT invent employers, degrees, certifications, dates, work history, achievements, or skills.
+- Tailor the writing to the company, role, and job description.
+- Mirror important keywords from the job description naturally.
+- Make the writing sound confident, human, specific, and professional.
+- Keep the cover letter concise and under 200 words.
+- Create exactly 3 application answers.
+- Return 5 to 8 matched keywords from the job description.
+
+OUTPUT:
+Return valid JSON only.
+`;
+
+    const response = await openai.responses.create({
+      model: "gpt-4.1-mini",
+      instructions:
+        "You are a professional career application assistant. You create accurate, tailored, non-fabricated application materials using only the user profile and job description provided.",
+      input: prompt,
       text: {
         format: {
           type: "json_schema",
@@ -77,22 +87,34 @@ Return JSON only.
             type: "object",
             additionalProperties: false,
             properties: {
-              coverLetter: { type: "string" },
+              coverLetter: {
+                type: "string",
+              },
               answers: {
                 type: "array",
+                minItems: 3,
+                maxItems: 3,
                 items: {
                   type: "object",
                   additionalProperties: false,
                   properties: {
-                    question: { type: "string" },
-                    answer: { type: "string" },
+                    question: {
+                      type: "string",
+                    },
+                    answer: {
+                      type: "string",
+                    },
                   },
                   required: ["question", "answer"],
                 },
               },
               matchedKeywords: {
                 type: "array",
-                items: { type: "string" },
+                minItems: 5,
+                maxItems: 8,
+                items: {
+                  type: "string",
+                },
               },
             },
             required: ["coverLetter", "answers", "matchedKeywords"],
@@ -102,36 +124,6 @@ Return JSON only.
       },
     });
 
-const prompt = `
-You are an expert career assistant helping a junior software engineer create tailored job application materials.
-
-USER PROFILE:
-${JSON.stringify(userProfile, null, 2)}
-
-COMPANY:
-${company || "Not provided"}
-
-ROLE:
-${roleTitle || "Not provided"}
-
-JOB DESCRIPTION:
-${jobDescription || "Not provided"}
-
-INSTRUCTIONS:
-- Use ONLY the user's real experience and skills
-- Do NOT invent companies, roles, or achievements
-- Make the writing sound confident, human, and specific
-- Tailor language to match the job description tone
-- Keep the cover letter concise (under 200 words)
-
-OUTPUT:
-Return JSON with:
-- coverLetter
-- answers (3 questions)
-- matchedKeywords (5 relevant terms from job description)
-`;
-
-
     const parsed = JSON.parse(response.output_text);
 
     return res.send(parsed);
@@ -140,14 +132,16 @@ Return JSON with:
 
     if (err.code === "invalid_api_key") {
       return res.status(401).send({
-        message: "Invalid OpenAI API key. Check backend/.env and restart the server.",
+        message:
+          "Invalid OpenAI API key. Check backend/.env and restart the server.",
       });
     }
 
     if (err.status === 429) {
       return res.status(429).send({
-        message: "OpenAI rate limit or quota issue. Check your API billing/usage.",
-        deatils: err.error?.message || err.message,
+        message:
+          "OpenAI rate limit or quota issue. Check your API billing/usage.",
+        details: err.error?.message || err.message,
       });
     }
 
