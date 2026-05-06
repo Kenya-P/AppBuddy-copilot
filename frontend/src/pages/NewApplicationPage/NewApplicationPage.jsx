@@ -4,44 +4,74 @@ import { request } from "../../utils/api";
 import * as applicationApi from "../../services/application.js";
 
 function NewApplicationPage() {
-  const [jobDescription, setJobDescription] = useState("");
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  
   const [saveMessage, setSaveMessage] = useState("");
   const [saving, setSaving] = useState(false);
   const [copyMessage, setCopyMessage] = useState("");
 
+  const [autoSavedAppId, setAutoSavedAppId] = useState(null);
+  const [saveStatus, setSaveStatus] = useState("");
+  const [isRegenerating, setIsRegenerating] = useState(false);
+
   const [company, setCompany] = useState("");
   const [roleTitle, setRoleTitle] = useState("");
+  const [jobDescription, setJobDescription] = useState("");
 
   const token = localStorage.getItem("jwt");
 
-  const handleGenerate = async () => {
-    setLoading(true);
-    setError("");
-    setResult(null);
+const generateApplication = async ({ regenerate = false } = {}) => {
+  setLoading(true);
+  setError("");
+  setSaveStatus("");
 
-    try {
-      const data = await request("/generate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ jobDescription }),
-      });
+  if (regenerate) {
+    setIsRegenerating(true);
+  }
 
-      setResult(data);
-    } catch (err) {
-      console.error("Generation failed:", err);
-      setError(typeof err === "string" ? err : "Failed to generate application materials.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    const data = await request("/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        company,
+        roleTitle,
+        jobDescription,
+      }),
+    });
 
-  const handleSaveDraft = async () => {
+    setResult(data);
+
+    const savedDraft = await applicationsApi.createApplication(token, {
+      company,
+      roleTitle,
+      jobDescription,
+      coverLetter: data.coverLetter,
+      answers: data.answers,
+      matchedKeywords: data.matchedKeywords || [],
+    });
+
+    setAutoSavedApplicationId(savedDraft._id);
+    setSaveStatus(regenerate ? "New version auto-saved." : "Draft auto-saved.");
+  } catch (err) {
+    console.error("Generation failed:", err);
+    setError(
+      typeof err === "string"
+        ? err
+        : "Failed to generate application materials."
+    );
+  } finally {
+    setLoading(false);
+    setIsRegenerating(false);
+  }
+};
+
+  const handleSaveCopy = async () => {
     if (!result) return;
 
     setSaving(true);
@@ -63,6 +93,14 @@ function NewApplicationPage() {
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleGenerate = () => {
+    generateApplication();
+  };
+
+  const handleRegenerate = () => {
+    generateApplication({ regenerate: true });
   };
 
   const copyToClipboard = async (text) => {
@@ -111,7 +149,7 @@ function NewApplicationPage() {
 
       {error && <p>{error}</p>}
 
-      <button onClick={handleSaveDraft} disabled={saving}>
+      <button onClick={handleSaveCopy} disabled={saving}>
         {saving ? "Saving..." : "Save Draft"}
       </button>
 
