@@ -12,3 +12,14 @@ export const parseResume = (token, file) => {
     body: formData,
   });
 };
+
+export const structureResume = (token, resumeText) => {
+  return request("/resume/structure", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ resumeText }),
+  });
+};

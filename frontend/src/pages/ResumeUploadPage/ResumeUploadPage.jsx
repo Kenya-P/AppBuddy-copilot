@@ -11,6 +11,9 @@ function ResumeUploadPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
+  const [structureProfile, setStructureProfile] = useState(null);
+  const [structuring, setStructuring] = useState(false);
+
   const handleFileChange = (e) => {
     setMessage("");
     setParsedText("");
@@ -53,6 +56,24 @@ function ResumeUploadPage() {
     }
   };
 
+  const handleStructureResume = async () => {
+    if (!parsedText) return;
+
+    setStructuring(true);
+    setMessage("");
+
+    try {
+      const data = await resumeApi.structureResume(token, parsedText);
+      setStructureProfile(data);
+      setMessage("Resume structured successfully.");
+    } catch (err) {
+      console.error("Resume structuring failed:", err);
+      setMessage(typeof err === "string" ? err : "Failed to extract profile fields.");
+    } finally {
+      setStructuring(false);
+    }
+  };
+
   return (
     <main>
       <h1>Upload Resume</h1>
@@ -86,8 +107,41 @@ function ResumeUploadPage() {
           <pre style={{ whiteSpace: "pre-wrap" }}>{parsedText}</pre>
         </section>
       )}
-    </main>
-  );
-}
+
+      <button
+        onClick={handleStructureResume}
+        disabled={structuring || !parsedText}
+      >
+        {structuring ? (
+          <>
+            <Spinner /> Structuring...
+          </>
+        ) : (
+          "Structure Resume"
+        )}
+      </button>
+
+      {structureProfile && (
+        <section className="result-card">
+          <h2>Extracted Profile Preview</h2>
+
+          <p><strong>Name:</strong> {structureProfile.fullName}</p>
+          <p><strong>Email:</strong> {structureProfile.email}</p>
+          <p><strong>Phone:</strong> {structureProfile.phone}</p>
+          <p><strong>Location:</strong> {structureProfile.location}</p>
+          <p><strong>LinkedIn:</strong> {structureProfile.linkedin}</p>
+          <p><strong>GitHub:</strong> {structureProfile.github}</p>
+          <p><strong>Portfolio:</strong> {structureProfile.portfolio}</p>
+
+          <h3>Summary</h3>
+          <p>{structureProfile.summary}</p>
+
+          <h3>Skills</h3>
+          <p>{structureProfile.skills?.join(", ")}</p>
+        </section>
+      )}
+          </main>
+        );
+      }
 
 export default ResumeUploadPage;
