@@ -11,6 +11,7 @@ import ProfilePage from "./pages/ProfilePage/ProfilePage.jsx";
 import NewApplicationPage from "./pages/NewApplicationPage/NewApplicationPage.jsx";
 import ApplicationsPage from "./pages/ApplicationPage/ApplicationPage.jsx";
 import ApplicationDetailPage from "./pages/ApplicationDetailPage/ApplicationDetailPage.jsx";
+import ResumeUploadPage from "./pages/ResumeUploadPage/ResumeUploadPage.jsx";
 
 import * as auth from "./services/auth.js";
 
@@ -61,6 +62,7 @@ function App() {
         {loggedIn && <Link className="nav-bar__auth-links" to="/dashboard">Dashboard</Link>}{" "}
         {loggedIn && <Link className="nav-bar__auth-links" to="/new-application">New Application</Link>}{" "}
         {loggedIn && <Link className="nav-bar__auth-links" to="/applications">My Applications</Link>}{" "}
+        {loggedIn && <Link className="nav-bar__auth-links" to="/resume">Upload Resume</Link>}{" "}
         {!loggedIn ? (
           <div className="nav-bar__button">
             <button  type="button" onClick={openLoginModal}>Login</button>
@@ -110,6 +112,14 @@ function App() {
           element={
             <ProtectedRoute loggedIn={loggedIn} loading={loading}>
               <ApplicationDetailPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/resume"
+          element={
+            <ProtectedRoute loggedIn={loggedIn} loading={loading}>
+              <ResumeUploadPage />
             </ProtectedRoute>
           }
         />
