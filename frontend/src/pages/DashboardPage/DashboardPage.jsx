@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import * as applicationApi from "../../services/application.js";
 import * as profileApi from "../../services/profile.js";
-import Spinner from "../../components/Spinner/Spinner.jsx";
+import Spinner from "../../components/Spinner.jsx";
 
 function DashboardPage() {
   const token = localStorage.getItem("jwt");

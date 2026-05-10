@@ -12,6 +12,7 @@ import NewApplicationPage from "./pages/NewApplicationPage/NewApplicationPage.js
 import ApplicationsPage from "./pages/ApplicationPage/ApplicationPage.jsx";
 import ApplicationDetailPage from "./pages/ApplicationDetailPage/ApplicationDetailPage.jsx";
 import ResumeUploadPage from "./pages/ResumeUploadPage/ResumeUploadPage.jsx";
+import GapAnalysisPage from "./pages/GapAnalysisPage.jsx";
 
 import * as auth from "./services/auth.js";
 
@@ -60,6 +61,7 @@ function App() {
         <Link className="nav-bar__auth-links" to="/">Home</Link>{" "}
         {loggedIn && <Link className="nav-bar__auth-links" to="/profile">Profile</Link>}{" "}
         {loggedIn && <Link className="nav-bar__auth-links" to="/dashboard">Dashboard</Link>}{" "}
+        {loggedIn && <Link className="nav-bar__auth-links" to="/analysis">Analyze Job</Link>}{" "}
         {loggedIn && <Link className="nav-bar__auth-links" to="/new-application">New Application</Link>}{" "}
         {loggedIn && <Link className="nav-bar__auth-links" to="/applications">My Applications</Link>}{" "}
         {loggedIn && <Link className="nav-bar__auth-links" to="/resume">Upload Resume</Link>}{" "}
@@ -120,6 +122,14 @@ function App() {
           element={
             <ProtectedRoute loggedIn={loggedIn} loading={loading}>
               <ResumeUploadPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/analysis"
+          element={
+            <ProtectedRoute loggedIn={loggedIn} loading={loading}>
+              <GapAnalysisPage />
             </ProtectedRoute>
           }
         />
