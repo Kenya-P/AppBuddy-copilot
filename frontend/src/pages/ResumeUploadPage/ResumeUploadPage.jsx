@@ -1,5 +1,6 @@
 import { useState } from "react";
 import * as resumeApi from "../../services/resume.js";
+import * as profileApi from "../../services/profile.js";
 import Spinner from "../../components/Spinner.jsx";
 
 function ResumeUploadPage() {
@@ -13,6 +14,8 @@ function ResumeUploadPage() {
 
   const [structureProfile, setStructureProfile] = useState(null);
   const [structuring, setStructuring] = useState(false);
+
+  const [savingProfile, setSavingProfile] = useState(false);
 
   const handleFileChange = (e) => {
     setMessage("");
@@ -73,6 +76,23 @@ function ResumeUploadPage() {
       setStructuring(false);
     }
   };
+
+  const handleApplyToProfile = async () => {
+  if (!structureProfile) return;
+
+  setSavingProfile(true);
+  setMessage("");
+
+  try {
+    await profileApi.updateProfile(token, structureProfile);
+    setMessage("Profile updated successfully 🎉");
+  } catch (err) {
+    console.error("Profile update failed:", err);
+    setMessage("Failed to update profile.");
+  } finally {
+    setSavingProfile(false);
+  }
+};
 
   return (
     <main>
@@ -138,6 +158,17 @@ function ResumeUploadPage() {
 
           <h3>Skills</h3>
           <p>{structureProfile.skills?.join(", ")}</p>
+       
+          <button onClick={handleApplyToProfile} disabled={savingProfile}>
+          {savingProfile ? (
+            <>
+              <Spinner /> Saving...
+            </>
+          ) : (
+            "Apply to Profile"
+          )}
+        </button>
+       
         </section>
       )}
           </main>
