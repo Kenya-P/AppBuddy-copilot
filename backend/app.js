@@ -9,6 +9,7 @@ const profileRoutes = require("./routes/profile")
 const aiRoutes = require("./routes/ai");
 const applicationRoutes = require("./routes/application");
 const resumeRoutes = require("./routes/resume");
+const analysisRoutes = require("./routes/analysis");
 
 const { errorHandler } = require("./middlewares/errorHandler");
 
@@ -23,6 +24,7 @@ app.use("/api", profileRoutes);
 app.use("/api", aiRoutes);
 app.use("/api", applicationRoutes);
 app.use("/api", resumeRoutes);
+app.use("/api", analysisRoutes);
 
 app.use(errorHandler);
 

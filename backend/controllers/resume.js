@@ -12,8 +12,10 @@ const parser = new PDFParse({ data: req.file.buffer });
 const result = await parser.getText();
 
     return res.send({
+      userId: req.user._id,
       fileName: req.file.originalname,
       text: result.text,
+      uploadedAt: new Date(),
     });
   } catch (err) {
     console.error("Error parsing resume:", err);
