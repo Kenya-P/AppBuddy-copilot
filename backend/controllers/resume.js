@@ -33,7 +33,8 @@ const structureResume = async (req, res, next) => {
       return res.status(500).send({
         message: "OpenAI API key is missing.",
       });
-    }
+    } 
+    
 
     const openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
@@ -91,6 +92,20 @@ const structureResume = async (req, res, next) => {
     return res.send(JSON.parse(response.output_text));
   } catch (err) {
     console.error("structureResume error:", err);
+
+    if (err.code === "invalid_api_key") {
+      return res.status(401).send({
+        message: "Invalid OpenAI API key. Check backend/.env and restart the server.",
+      });
+    }
+
+    if (err.status === 429) {
+      return res.status(429).send({
+        message: "OpenAI rate limit or quota issue. Check your API billing/usage.",
+        details: err.error?.message || err.message,
+      });
+    }
+    
     return next(err);
   }
 };
