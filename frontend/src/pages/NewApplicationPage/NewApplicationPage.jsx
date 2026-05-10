@@ -216,6 +216,29 @@ function NewApplicationPage() {
           ))}
         </div>
       )}
+
+      <div className="result-card__section">
+        <h3>Custom Question</h3>
+
+        <input
+          placeholder="Paste a custom application question..."
+          value={customQuestion}
+          onChange={(e) => setCustomQuestion(e.target.value)}
+        />
+
+        <button onClick={handleGenerateAnswer} disabled={answerLoading}>
+          {answerLoading ? <Spinner /> : "Generate Answer"}
+        </button>
+
+        {customAnswer && (
+          <div className="answer-card">
+            <p>{customAnswer}</p>
+            <button onClick={() => copyToClipboard(customAnswer)}>
+              Copy Answer
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
