@@ -1,5 +1,5 @@
 import { useState } from "react";
-import * as applicationApi from "../services/application.js";
+import { request } from "../utils/api.js";
 import Spinner from "../components/Spinner.jsx";
 
 function GapAnalysisPage() {
@@ -10,10 +10,15 @@ function GapAnalysisPage() {
   const [loading, setLoading] = useState(false);
 
   const handleAnalyze = async () => {
+    if (!job.trim()) {
+      console.error("Job description is required");
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const res = await applicationApi.request("/analyze", {
+      const res = await request("/analyze", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -40,7 +45,7 @@ function GapAnalysisPage() {
         placeholder="Paste job description..."
       />
 
-      <button onClick={handleAnalyze} disabled={loading}>
+      <button onClick={handleAnalyze} disabled={loading || !job.trim()}>
         {loading ? <Spinner /> : "Analyze"}
       </button>
 

@@ -87,12 +87,12 @@ function NewApplicationPage() {
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        question: customQuestion,
+        question: customQuestions,
         jobDescription,
       }),
     });
 
-    setCustomAnswer(data.answer);
+    setCustomAnswers(data.answer);
   } catch (err) {
     console.error("Failed to generate answer:", err);
   } finally {
@@ -222,18 +222,18 @@ function NewApplicationPage() {
 
         <input
           placeholder="Paste a custom application question..."
-          value={customQuestion}
-          onChange={(e) => setCustomQuestion(e.target.value)}
+          value={customQuestions}
+          onChange={(e) => setCustomQuestions(e.target.value)}
         />
 
         <button onClick={handleGenerateAnswer} disabled={answerLoading}>
           {answerLoading ? <Spinner /> : "Generate Answer"}
         </button>
 
-        {customAnswer && (
+        {customAnswers && (
           <div className="answer-card">
-            <p>{customAnswer}</p>
-            <button onClick={() => copyToClipboard(customAnswer)}>
+            <p>{customAnswers}</p>
+            <button onClick={() => copyToClipboard(customAnswers)}>
               Copy Answer
             </button>
           </div>

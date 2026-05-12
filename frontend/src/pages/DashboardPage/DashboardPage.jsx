@@ -30,7 +30,7 @@ function DashboardPage() {
       try {
         const [applicationsData, profileData] = await Promise.all([
           applicationApi.getApplications(token),
-          profileApi.getMyProfile(token),
+          profileApi.getProfile(token),
         ]);
 
         setApplications(applicationsData);

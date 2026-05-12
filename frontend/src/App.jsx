@@ -58,22 +58,30 @@ function App() {
   return (
     <div>
       <nav className="nav-bar">
-        <Link className="nav-bar__auth-links" to="/">Home</Link>{" "}
-        {loggedIn && <Link className="nav-bar__auth-links" to="/profile">Profile</Link>}{" "}
-        {loggedIn && <Link className="nav-bar__auth-links" to="/dashboard">Dashboard</Link>}{" "}
-        {loggedIn && <Link className="nav-bar__auth-links" to="/analysis">Analyze Job</Link>}{" "}
-        {loggedIn && <Link className="nav-bar__auth-links" to="/new-application">New Application</Link>}{" "}
-        {loggedIn && <Link className="nav-bar__auth-links" to="/applications">My Applications</Link>}{" "}
-        {loggedIn && <Link className="nav-bar__auth-links" to="/resume">Upload Resume</Link>}{" "}
+      <Link className="nav-bar__logo" to="/">AppBuddy</Link>
+
+      {loggedIn && (
+        <div className="nav-bar__links">
+          <Link className="nav-bar__link" to="/dashboard">Dashboard</Link>
+          <Link className="nav-bar__link" to="/new-application">New Application</Link>
+          <Link className="nav-bar__link" to="/applications">Applications</Link>
+          <Link className="nav-bar__link" to="/resume">Resume</Link>
+          <Link className="nav-bar__link" to="/analysis">Analyze Job</Link>
+          <Link className="nav-bar__link" to="/profile">Profile</Link>
+        </div>
+      )}
+
+      <div className="nav-bar__actions">
         {!loggedIn ? (
-          <div className="nav-bar__button">
-            <button  type="button" onClick={openLoginModal}>Login</button>
+          <>
+            <button type="button" onClick={openLoginModal}>Login</button>
             <button type="button" onClick={openRegisterModal}>Register</button>
-          </div>
+          </>
         ) : (
-          <button className="nav-bar__button" onClick={handleLogout}>Logout</button>
+          <button type="button" onClick={handleLogout}>Logout</button>
         )}
-      </nav>
+      </div>
+    </nav>
 
       <Routes>
         <Route path="/" element={<HomePage />} />
