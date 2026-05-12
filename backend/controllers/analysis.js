@@ -1,8 +1,19 @@
+const OpenAI = require("openai");
+const Profile = require("../models/Profile");
+
 const analyzeJob = async (req, res, next) => {
   try {
-    const { jobDescription } = req.body;
+    const { jobDescription } = req.body || {};
+
+    if (!jobDescription) {
+      return res.status(400).json({ error: "Job description is required" });
+    }
 
     const profile = await Profile.findOne({ userId: req.user._id });
+
+    if (!profile) {
+      return res.status(404).json({ error: "Profile not found" });
+    }
 
     const openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
@@ -27,6 +38,7 @@ Return JSON only.
           name: "gap_analysis",
           schema: {
             type: "object",
+            additionalProperties: false,
             properties: {
               matchedSkills: {
                 type: "array",
@@ -43,6 +55,7 @@ Return JSON only.
             },
             required: ["matchedSkills", "missingSkills", "suggestions"],
           },
+          strict: true,
         },
       },
     });
