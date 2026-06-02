@@ -102,7 +102,7 @@ function ApplicationDetailPage() {
   if (!application) return <p>Application not found.</p>;
 
 return (
-  <div>
+  <div className="application-page">
     <button onClick={() => navigate("/applications")}>Back</button>
 
     {!isEditing ? (

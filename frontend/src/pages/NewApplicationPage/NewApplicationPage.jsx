@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { request } from "../../utils/api";
 import Spinner from "../../components/Spinner.jsx";
+import "./NewApplicationPage.css";
 
 import * as applicationApi from "../../services/application.js";
 
@@ -145,10 +146,11 @@ function NewApplicationPage() {
   }
 
   return (
-    <div>
-      <h1>New Application</h1>
+    <div className="new-application-page">
+      <h1 className="new-application-page__title">New Application</h1>
 
       <input
+        className="new-application-page__input"
         type="text"
         placeholder="Company Name"
         value={company}
@@ -156,6 +158,7 @@ function NewApplicationPage() {
       />
 
       <input
+        className="new-application-page__input"
         type="text"
         placeholder="Role Title"
         value={roleTitle}
@@ -163,6 +166,7 @@ function NewApplicationPage() {
       />
 
       <textarea
+        className="new-application-page__textarea"
         placeholder="Paste the job description here..."
         value={jobDescription}
         onChange={(e) => setJobDescription(e.target.value)}
@@ -173,6 +177,7 @@ function NewApplicationPage() {
       <br />
 
       <button
+        className="new-application-page__btn"
         onClick={handleGenerate}
         disabled={
           loading ||
@@ -192,22 +197,29 @@ function NewApplicationPage() {
 
       {error && <p>{error}</p>}
 
-      <button onClick={handleSaveCopy} disabled={saving}>
+      <button 
+      className="new-application-page__btn" 
+      onClick={handleSaveCopy} disabled={saving}
+      >
         {saving ? <Spinner size="small" /> : "Save Draft"}
       </button>
 
       {saveMessage && <p>{saveMessage}</p>}
 
       {result && (
-        <div>
+        <div className="new-application-page__result">
           <h2>Matched Keywords</h2>
           <p>{result.matchedKeywords?.join(", ") || "None detected"}</p>
 
           <h2>Cover Letter</h2>
           <pre style={{ whiteSpace: "pre-wrap" }}>{result.coverLetter}</pre>
-          <button onClick={() => copyToClipboard(result.coverLetter)}>Copy Cover Letter</button>
+          <button 
+          className="new-application-page__btn"
+          onClick={() => copyToClipboard(result.coverLetter)}>
+            Copy Cover Letter
+          </button>
 
-          <h2>Application Answers</h2>
+          <h2 className="new-application-page__subtitle">Application Answers</h2>
           {result.answers?.map((item, index) => (
             <div key={index}>
               <h3>{item.question}</h3>
@@ -217,23 +229,31 @@ function NewApplicationPage() {
         </div>
       )}
 
-      <div className="result-card__section">
-        <h3>Custom Question</h3>
+      <div className="new-application-page__section">
+        <h3 className="new-application-page__subtitle">Custom Question</h3>
 
         <input
+          className="new-application-page__input"
           placeholder="Paste a custom application question..."
           value={customQuestions}
           onChange={(e) => setCustomQuestions(e.target.value)}
         />
 
-        <button onClick={handleGenerateAnswer} disabled={answerLoading}>
+        <button 
+        className="new-application-page__btn" 
+        onClick={handleGenerateAnswer} 
+        disabled={answerLoading}
+        >
           {answerLoading ? <Spinner /> : "Generate Answer"}
         </button>
 
         {customAnswers && (
           <div className="answer-card">
             <p>{customAnswers}</p>
-            <button onClick={() => copyToClipboard(customAnswers)}>
+            <button 
+            className="new-application-page__btn"
+            onClick={() => copyToClipboard(customAnswers)}
+            >
               Copy Answer
             </button>
           </div>

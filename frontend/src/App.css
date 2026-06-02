@@ -5,6 +5,10 @@
   padding: 16px 32px;
   border-bottom: 1px solid #e5e7eb;
   background: #ffffff;
+  font-family: "Arial", sans-serif;
+  font-size: 16px;
+  text-align: center;
+  text-decoration: none;
 }
 
 .nav-bar__logo {
@@ -17,6 +21,7 @@
 .nav-bar__links {
   display: flex;
   gap: 16px;
+  text-decoration: none;
   flex: 1;
 }
 
@@ -27,10 +32,21 @@
 }
 
 .nav-bar__link:hover {
-  color: #2563eb;
+  color: #a9f079;
 }
 
-.nav-bar__actions {
+.nav-bar__btn {
   display: flex;
-  gap: 12px;
+  padding: 10px 10px;
+  font-size: 1em;
+  background-color: #c4ea17;
+  color: #000000;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.nav-bar__btn:hover {
+  background-color: #a3d614;
 }

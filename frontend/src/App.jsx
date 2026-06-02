@@ -56,7 +56,7 @@ function App() {
   };
 
   return (
-    <div>
+    <div className="app-container">
       <nav className="nav-bar">
       <Link className="nav-bar__logo" to="/">AppBuddy</Link>
 
@@ -71,14 +71,14 @@ function App() {
         </div>
       )}
 
-      <div className="nav-bar__actions">
+      <div className="nav-bar__btns">
         {!loggedIn ? (
           <>
-            <button type="button" onClick={openLoginModal}>Login</button>
-            <button type="button" onClick={openRegisterModal}>Register</button>
+            <button className="nav-bar__btn" type="button" onClick={openLoginModal}>Login</button>
+            <button className="nav-bar__btn" type="button" onClick={openRegisterModal}>Register</button>
           </>
         ) : (
-          <button type="button" onClick={handleLogout}>Logout</button>
+          <button className="nav-bar__btn" type="button" onClick={handleLogout}>Logout</button>
         )}
       </div>
     </nav>

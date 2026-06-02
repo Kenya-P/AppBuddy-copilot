@@ -49,7 +49,6 @@ function DashboardPage() {
 
   return (
     <main>
-      <h1>Dashboard</h1>
 
       <section>
         <h2>Profile</h2>
