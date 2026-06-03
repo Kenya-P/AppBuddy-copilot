@@ -63,7 +63,6 @@ function App() {
       {loggedIn && (
         <div className="nav-bar__links">
           <Link className="nav-bar__link" to="/dashboard">Dashboard</Link>
-          <Link className="nav-bar__link" to="/new-application">New Application</Link>
           <Link className="nav-bar__link" to="/applications">Applications</Link>
           <Link className="nav-bar__link" to="/resume">Resume</Link>
           <Link className="nav-bar__link" to="/analysis">Analyze Job</Link>
