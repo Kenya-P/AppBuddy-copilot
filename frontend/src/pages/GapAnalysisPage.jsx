@@ -18,7 +18,7 @@ function GapAnalysisPage() {
     setLoading(true);
 
     try {
-      const res = await request("/analyze", {
+      const res = await request("/analysis", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -1,26 +1,26 @@
-.new-application-page {
+.new-application-modal {
   padding: 20px;
   max-width: 800px;
   margin: 0 auto;
   font-family: "Arial", sans-serif;
 }
 
-.new-application-page__title {
+.new-application-modal__title {
   font-size: 2em;
   text-align: center;
 }
 
-.new-application-page__subtitle {
+.new-application-modal__subtitle {
   font-size: 1.5em;
   margin-top: 20px;
   margin-bottom: 10px;
 }
 
-.new-application-page__section {
+.new-application-modal__section {
   margin-bottom: 30px;
 }
 
-.new-application-page__input {
+.new-application-modal__input {
   width: 100%;
   padding: 10px;
   font-size: 1em;
@@ -29,7 +29,7 @@
   border-radius: 5px;
 }
 
-.new-application-page__textarea {
+.new-application-modal__textarea {
   width: 100%;
   height: 150px;
   padding: 10px;
@@ -39,7 +39,7 @@
   border-radius: 5px;
 }
 
-.new-application-page__btn {
+.new-application-modal__btn {
   margin-top: 10px;
   margin-bottom: 10px;
   padding: 10px 20px;
@@ -51,7 +51,7 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
-.new-application-page__btn:hover {
+.new-application-modal__btn:hover {
   background-color: #a3d614;
 }
 

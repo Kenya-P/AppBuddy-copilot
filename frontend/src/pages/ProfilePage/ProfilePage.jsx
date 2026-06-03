@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import * as profileApi from "../../services/profile";
 
+import "./ProfilePage.css";
+
 function ProfilePage() {
   const [formData, setFormData] = useState({
     fullName: "",
@@ -97,16 +99,17 @@ function ProfilePage() {
   }
 
   return (
-    <div>
-      <h1>Your Profile</h1>
+    <div className="profile-page">
+      <h1 className="profile-page__title">Your Profile</h1>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="profile-page__form">
         <input
           name="fullName"
           type="text"
           placeholder="Full Name"
           value={formData.fullName}
           onChange={handleChange}
+          className="profile-page__input"
         />
         <input
           name="email"
@@ -114,6 +117,7 @@ function ProfilePage() {
           placeholder="Email"
           value={formData.email}
           onChange={handleChange}
+          className="profile-page__input"
         />
         <input
           name="phone"
@@ -121,6 +125,7 @@ function ProfilePage() {
           placeholder="Phone"
           value={formData.phone}
           onChange={handleChange}
+          className="profile-page__input"
         />
         <input
           name="location"
@@ -128,6 +133,7 @@ function ProfilePage() {
           placeholder="Location"
           value={formData.location}
           onChange={handleChange}
+          className="profile-page__input"
         />
         <input
           name="linkedin"
@@ -135,6 +141,7 @@ function ProfilePage() {
           placeholder="LinkedIn URL"
           value={formData.linkedin}
           onChange={handleChange}
+          className="profile-page__input"
         />
         <input
           name="github"
@@ -142,6 +149,7 @@ function ProfilePage() {
           placeholder="GitHub URL"
           value={formData.github}
           onChange={handleChange}
+          className="profile-page__input"
         />
         <input
           name="portfolio"
@@ -149,12 +157,14 @@ function ProfilePage() {
           placeholder="Portfolio URL"
           value={formData.portfolio}
           onChange={handleChange}
+          className="profile-page__input"
         />
         <textarea
           name="summary"
           placeholder="Professional Summary"
           value={formData.summary}
           onChange={handleChange}
+          className="profile-page__textarea"
         />
         <input
           name="skills"
@@ -162,14 +172,15 @@ function ProfilePage() {
           placeholder="Skills (comma-separated)"
           value={formData.skills}
           onChange={handleChange}
+          className="profile-page__input"
         />
 
-        <button type="submit" disabled={saving}>
+        <button type="submit" disabled={saving} className="profile-page__btn">
           {saving ? "Saving..." : "Save Profile"}
         </button>
       </form>
 
-      {message && <p>{message}</p>}
+      {message && <p className="profile-page__message">{message}</p>}
     </div>
   );
 }

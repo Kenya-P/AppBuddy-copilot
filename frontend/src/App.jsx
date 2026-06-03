@@ -8,7 +8,7 @@ import LoginPage from "./pages/LoginPage/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage/RegisterPage.jsx";
 import DashboardPage from "./pages/DashboardPage/DashboardPage.jsx";
 import ProfilePage from "./pages/ProfilePage/ProfilePage.jsx";
-import NewApplicationPage from "./pages/NewApplicationPage/NewApplicationPage.jsx";
+import NewApplicationModal from "./pages/NewApplicationModal/NewApplicationModal.jsx";
 import ApplicationsPage from "./pages/ApplicationPage/ApplicationPage.jsx";
 import ApplicationDetailPage from "./pages/ApplicationDetailPage/ApplicationDetailPage.jsx";
 import ResumeUploadPage from "./pages/ResumeUploadPage/ResumeUploadPage.jsx";
@@ -98,14 +98,6 @@ function App() {
           element={
             <ProtectedRoute loggedIn={loggedIn} loading={loading}>
               <ProfilePage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/new-application"
-          element={
-            <ProtectedRoute loggedIn={loggedIn} loading={loading}>
-              <NewApplicationPage />
             </ProtectedRoute>
           }
         />
