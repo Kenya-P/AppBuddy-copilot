@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import NewApplicationModal from "../NewApplicationModal/NewApplicationModal.jsx";
+import NewApplicationModal from "../../components/NewApplicationModal/NewApplicationModal.jsx";
 import Spinner from "../../components/Spinner.jsx";
 import * as applicationsApi from "../../services/application.js";
 
 function ApplicationsPage() {
+  const token = localStorage.getItem("jwt");
+
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isNewApplicationModalOpen, setIsNewApplicationModalOpen] = useState(false);
-
-  const token = localStorage.getItem("jwt");
+  const [isNewApplicationOpen, setIsNewApplicationOpen] = useState(false);
 
   useEffect(() => {
     applicationsApi
@@ -20,11 +20,11 @@ function ApplicationsPage() {
   }, [token]);
 
   const handleApplicationCreated = (newApplication) => {
-    setApplications((prevApps) => [...prevApps, newApplication]);
-    setIsNewApplicationModalOpen(false);
+    setApplications((prev) => [newApplication, ...prev]);
+    setIsNewApplicationOpen(false);
   };
 
-  if (loading) return <p>Loading saved applications...</p>;
+  if (loading) return <Spinner />;
 
   return (
     <main>
@@ -34,7 +34,7 @@ function ApplicationsPage() {
           <p>Manage your saved application drafts.</p>
         </div>
 
-        <button onClick={() => setIsNewApplicationModalOpen(true)}>
+        <button onClick={() => setIsNewApplicationOpen(true)}>
           New Application
         </button>
       </div>
@@ -52,8 +52,8 @@ function ApplicationsPage() {
       )}
 
       <NewApplicationModal
-        isOpen={isNewApplicationModalOpen}
-        onClose={() => setIsNewApplicationModalOpen(false)}
+        isOpen={isNewApplicationOpen}
+        onClose={() => setIsNewApplicationOpen(false)}
         onApplicationCreated={handleApplicationCreated}
       />
     </main>
