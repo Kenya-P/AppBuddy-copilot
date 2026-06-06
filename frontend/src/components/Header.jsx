@@ -7,7 +7,7 @@ function Header() {
         <a href="/dashboard">Dashboard</a>
         <a href="/applications">Applications</a>
         <a href="/resume">Resume</a>
-        <a href="/analysis">Analyze</a>
+        <a href="/analyze">Analyze</a>
         <a href="/profile">Profile</a>
       </nav>
     </header>

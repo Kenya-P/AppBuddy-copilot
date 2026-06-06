@@ -8,7 +8,6 @@ import LoginPage from "./pages/LoginPage/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage/RegisterPage.jsx";
 import DashboardPage from "./pages/DashboardPage/DashboardPage.jsx";
 import ProfilePage from "./pages/ProfilePage/ProfilePage.jsx";
-import NewApplicationModal from "./components/NewApplicationModal/NewApplicationModal.jsx";
 import ApplicationsPage from "./pages/ApplicationPage/ApplicationPage.jsx";
 import ApplicationDetailPage from "./pages/ApplicationDetailPage/ApplicationDetailPage.jsx";
 import ResumeUploadPage from "./pages/ResumeUploadPage/ResumeUploadPage.jsx";
@@ -34,7 +33,7 @@ function App() {
       const user = await auth.getCurrentUser(token);
       handleLogin(user, token);
       closeActiveModal();
-      navigate("/dashboard");
+      navigate("/");
     } catch (err) {
       console.error("Login failed:", err);
     } finally {
@@ -62,7 +61,6 @@ function App() {
 
       {loggedIn && (
         <div className="nav-bar__links">
-          <Link className="nav-bar__link" to="/dashboard">Dashboard</Link>
           <Link className="nav-bar__link" to="/applications">Applications</Link>
           <Link className="nav-bar__link" to="/resume">Resume</Link>
           <Link className="nav-bar__link" to="/analysis">Analyze Job</Link>
@@ -83,14 +81,9 @@ function App() {
     </nav>
 
       <Routes>
-        <Route path="/" element={<HomePage />} />
         <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute loggedIn={loggedIn} loading={loading}>
-              <DashboardPage />
-            </ProtectedRoute>
-          }
+          path="/"
+          element={loggedIn ? <DashboardPage /> : <HomePage />}
         />
         <Route
           path="/profile"
