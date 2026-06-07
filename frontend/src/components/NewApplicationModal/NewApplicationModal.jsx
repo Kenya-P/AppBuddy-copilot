@@ -2,6 +2,7 @@ import { useState } from "react";
 import { request } from "../../utils/api.js";
 import Spinner from "../Spinner.jsx";
 import * as applicationApi from "../../services/application.js";
+import ModalWithForm from "../ModalWithForm/ModalWithForm.jsx";
 import "./NewApplicationModal.css";
 
 function NewApplicationModal({ isOpen, onClose, onApplicationCreated }) {
@@ -13,7 +14,18 @@ function NewApplicationModal({ isOpen, onClose, onApplicationCreated }) {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  if (!isOpen) return null;
+  const resetForm = () => {
+    setCompany("");
+    setRoleTitle("");
+    setJobDescription("");
+    setMessage("");
+  };
+
+  const handleClose = () => {
+    if (loading) return;
+    resetForm();
+    onClose();
+  };
 
   const handleGenerate = async (e) => {
     e.preventDefault();
@@ -50,11 +62,7 @@ function NewApplicationModal({ isOpen, onClose, onApplicationCreated }) {
       });
 
       onApplicationCreated(savedDraft);
-
-      setCompany("");
-      setRoleTitle("");
-      setJobDescription("");
-      setMessage("Application created.");
+      resetForm();
       onClose();
     } catch (err) {
       console.error("Failed to create application:", err);
@@ -69,69 +77,66 @@ function NewApplicationModal({ isOpen, onClose, onApplicationCreated }) {
   };
 
   return (
-    <div className="new-application-modal modal_opened">
-      <div className="new-application-modal__content">
-        <button
-          type="button"
-          className="new-application-modal__close-btn"
-          onClick={onClose}
+    <ModalWithForm
+      title="New Application"
+      name="new-application"
+      className="new-application-modal__title"
+      isOpen={isOpen}
+      onClose={handleClose}
+      onSubmit={handleGenerate}
+      buttonText={
+        loading ? (
+          <>
+            <Spinner /> Generating...
+          </>
+        ) : (
+          "Generate Application"
+        )
+      }
+    >
+      <label className="new-application-modal__label">
+        Company
+        <input
+          name="company"
+          type="text"
+          placeholder="Company"
+          className="new-application-modal__input"
+          value={company}
+          onChange={(e) => setCompany(e.target.value)}
           disabled={loading}
-        >
-          ×
-        </button>
+          required
+        />
+      </label>
 
-        <h2 className="new-application-modal__title">New Application</h2>
+      <label className="new-application-modal__label">
+        Role Title
+        <input
+          name="roleTitle"
+          type="text"
+          placeholder="Role Title"
+          className="new-application-modal__input"
+          value={roleTitle}
+          onChange={(e) => setRoleTitle(e.target.value)}
+          disabled={loading}
+          required
+        />
+      </label>
 
-        <form onSubmit={handleGenerate}>
-          <input
-            type="text"
-            className="new-application-modal__input"
-            placeholder="Company Name"
-            value={company}
-            onChange={(e) => setCompany(e.target.value)}
-            disabled={loading}
-          />
+      <label className="new-application-modal__label">
+        Job Description
+        <textarea
+          name="jobDescription"
+          placeholder="Paste job description"
+          className="new-application-modal__textarea"
+          value={jobDescription}
+          onChange={(e) => setJobDescription(e.target.value)}
+          disabled={loading}
+          required
+        />
+      </label>
 
-          <input
-            type="text"
-            className="new-application-modal__input"
-            placeholder="Role Title"
-            value={roleTitle}
-            onChange={(e) => setRoleTitle(e.target.value)}
-            disabled={loading}
-          />
-
-          <textarea
-            className="new-application-modal__textarea"
-            placeholder="Job Description"
-            value={jobDescription}
-            onChange={(e) => setJobDescription(e.target.value)}
-            disabled={loading}
-          />
-
-          <button
-            type="submit"
-            className="new-application-modal__btn"
-            disabled={
-              loading ||
-              !company.trim() ||
-              !roleTitle.trim() ||
-              !jobDescription.trim()
-            }
-          >
-            {loading ? (
-              <>
-                <Spinner /> Generating...
-              </>
-            ) : (
-              "Generate Application"
-            )}
-          </button>
-        </form>
-
-        {message && <p>{message}</p>}
-      </div>
-    </div>
+      {message && <p className="new-application-modal__message">{message}</p>}
+    </ModalWithForm>
   );
 }
 

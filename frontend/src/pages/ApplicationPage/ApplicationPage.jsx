@@ -4,6 +4,8 @@ import NewApplicationModal from "../../components/NewApplicationModal/NewApplica
 import Spinner from "../../components/Spinner.jsx";
 import * as applicationsApi from "../../services/application.js";
 
+import "./ApplicationPage.css";
+
 function ApplicationsPage() {
   const token = localStorage.getItem("jwt");
 
@@ -28,25 +30,25 @@ function ApplicationsPage() {
 
   return (
     <main>
-      <div className="page-header">
-        <div>
-          <h1>Applications</h1>
-          <p>Manage your saved application drafts.</p>
+      <div className="application-page">
+        <div className="application-page__header">
+          <h1 className="application-page__title">Applications</h1>
+          <p className="application-page__subtitle">Manage your saved application drafts.</p>
         </div>
 
-        <button onClick={() => setIsNewApplicationOpen(true)}>
+        <button className="application-page__btn" onClick={() => setIsNewApplicationOpen(true)}>
           New Application
         </button>
       </div>
 
       {applications.length === 0 ? (
-        <p>No saved drafts yet. Create your first application.</p>
+        <p className="application-page__message">No saved drafts yet. Create your first application.</p>
       ) : (
         applications.map((app) => (
-          <div key={app._id} className="card">
-            <h2>{app.roleTitle || "Untitled Role"}</h2>
-            <p>{app.company || "No company listed"}</p>
-            <Link to={`/applications/${app._id}`}>View Draft</Link>
+          <div key={app._id} className="application-page__card">
+            <h2 className="application-page__card-title">{app.roleTitle || "Untitled Role"}</h2>
+            <p className="application-page__card-company">{app.company || "No company listed"}</p>
+            <Link to={`/applications/${app._id}`} className="application-page__link">View Draft</Link>
           </div>
         ))
       )}

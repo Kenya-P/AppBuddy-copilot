@@ -11,7 +11,10 @@ function DashboardPage() {
   const [loading, setLoading] = useState(true);
 
   const calculateCompleteness = (profileData) => {
-    if (!profileData) return 0;
+    if (!profileData) return {
+      percentage: 0,
+      missingFields: ["Full Name", "Email", "Location", "Summary", "Skills"],
+    };
 
     const fields = [
       profileData.fullName,
@@ -22,7 +25,11 @@ function DashboardPage() {
     ];
 
     const filled = fields.filter(Boolean).length;
-    return Math.round((filled / fields.length) * 100);
+    const missingFields = ["Full Name", "Email", "Location", "Summary", "Skills"].filter((_, index) => !fields[index]);
+    return {
+      percentage: Math.round((filled / fields.length) * 100),
+      missingFields,
+    };
   };
 
   useEffect(() => {
@@ -52,7 +59,14 @@ function DashboardPage() {
 
       <section>
         <h2>Profile</h2>
-        <p>Profile completeness: {calculateCompleteness(profile)}%</p>
+        <p>Profile completeness: {calculateCompleteness(profile).percentage}%</p>
+        {calculateCompleteness(profile).missingFields.length > 0 && (
+          <ul>
+            {calculateCompleteness(profile).missingFields.map((field) => (
+              <li key={field}>{field} is missing</li>
+            ))}
+          </ul>
+        )}
       </section>
 
       <section>

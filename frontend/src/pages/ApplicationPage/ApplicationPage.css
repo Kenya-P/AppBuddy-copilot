@@ -1,0 +1,67 @@
+.application-page {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.application-page__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.application-page__title {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.application-page__subtitle {
+  font-size: 1rem;
+  color: #666;
+  margin: 0;
+}
+
+.application-page__message {
+  font-size: 1.25rem;
+  color: #555;
+  text-align: center;
+  margin-top: 50px;
+}
+
+.application-page__btn {
+  background-color: #c4ea17;
+  color: black;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.application-page__btn:hover {
+  background-color: #a3d007;
+}
+
+.application-page__card {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.application-page__card-title {
+  font-size: 1.25rem;
+  margin: 0 0 10px 0;
+}
+
+.application-page__card-company {
+  font-size: 1rem;
+  color: #555;
+  margin: 0 0 10px 0;
+}
+
+.application-page__link {
+  color: #007bff;
+  text-decoration: none;
+}

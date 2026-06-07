@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import ModalWithForm from "../ModalWithForm/ModalWithForm.jsx";
+import ModalWithForm from "../../components/ModalWithForm/ModalWithForm.jsx";
 import { useFormAndValidation } from "../../utils/useFormAndValidation.js";
 
 function LoginPage({ isOpen, onClose, onLogin, isLoading, onClickRegister }) {
