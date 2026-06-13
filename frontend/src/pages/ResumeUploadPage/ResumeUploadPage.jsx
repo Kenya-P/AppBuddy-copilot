@@ -2,6 +2,7 @@ import { useState } from "react";
 import * as resumeApi from "../../services/resume.js";
 import * as profileApi from "../../services/profile.js";
 import Spinner from "../../components/Spinner.jsx";
+import "./ResumeUploadPage.css";
 
 function ResumeUploadPage() {
   const token = localStorage.getItem("jwt");
@@ -95,19 +96,20 @@ function ResumeUploadPage() {
 };
 
   return (
-    <main>
-      <h1>Upload Resume</h1>
-      <p>Upload a PDF resume to extract your profile information.</p>
+    <main className="resume-upload-page">
+      <h1 className="resume-upload-page__title">Upload Resume</h1>
+      <p className="resume-upload-page__description">Upload a PDF resume to extract your profile information.</p>
 
-      <form onSubmit={handleUpload}>
+      <form className="resume-upload-page__form" onSubmit={handleUpload}>
         <input
+          className="resume-upload-page__input"
           type="file"
           accept="application/pdf"
           onChange={handleFileChange}
           disabled={loading}
         />
 
-        <button type="submit" disabled={loading || !file}>
+        <button className="resume-upload-page__btn" type="submit" disabled={loading || !file}>
           {loading ? (
             <>
               <Spinner /> Parsing...
@@ -118,17 +120,18 @@ function ResumeUploadPage() {
         </button>
       </form>
 
-      {message && <p>{message}</p>}
+      {message && <p className="resume-upload-page__message">{message}</p>}
 
       {parsedText && (
-        <section className="result-card">
-          <h2>{fileName}</h2>
-          <h3>Extracted Resume Text</h3>
-          <pre style={{ whiteSpace: "pre-wrap" }}>{parsedText}</pre>
+        <section className="resume-upload-page__result-card">
+          <h2 className="resume-upload-page__result-card-title">{fileName}</h2>
+          <h3 className="resume-upload-page__result-card-subtitle">Extracted Resume Text</h3>
+          <pre className="resume-upload-page__result-card-content" style={{ whiteSpace: "pre-wrap" }}>{parsedText}</pre>
         </section>
       )}
 
       <button
+        className="resume-upload-page__btn"
         onClick={handleStructureResume}
         disabled={structuring || !parsedText}
       >
@@ -142,8 +145,8 @@ function ResumeUploadPage() {
       </button>
 
       {structureProfile && (
-        <section className="result-card">
-          <h2>Extracted Profile Preview</h2>
+        <section className="resume-upload-page__result-card">
+          <h2 className="resume-upload-page__result-card-title">Extracted Profile Preview</h2>
 
           <p><strong>Name:</strong> {structureProfile.fullName}</p>
           <p><strong>Email:</strong> {structureProfile.email}</p>
@@ -153,13 +156,13 @@ function ResumeUploadPage() {
           <p><strong>GitHub:</strong> {structureProfile.github}</p>
           <p><strong>Portfolio:</strong> {structureProfile.portfolio}</p>
 
-          <h3>Summary</h3>
+          <h3 className="resume-upload-page__result-card-subtitle">Summary</h3>
           <p>{structureProfile.summary}</p>
 
-          <h3>Skills</h3>
+          <h3 className="resume-upload-page__result-card-subtitle">Skills</h3>
           <p>{structureProfile.skills?.join(", ")}</p>
        
-          <button onClick={handleApplyToProfile} disabled={savingProfile}>
+          <button className="resume-upload-page__btn" onClick={handleApplyToProfile} disabled={savingProfile}>
           {savingProfile ? (
             <>
               <Spinner /> Saving...
