@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import * as applicationApi from "../../services/application.js";
 import * as profileApi from "../../services/profile.js";
 import Spinner from "../../components/Spinner.jsx";
+import "./DashboardPage.css";
 
 function DashboardPage() {
   const token = localStorage.getItem("jwt");
@@ -55,13 +56,13 @@ function DashboardPage() {
   if (loading) return <Spinner />;
 
   return (
-    <main>
+    <main className="dashboard-page">
 
-      <section>
-        <h2>Profile</h2>
-        <p>Profile completeness: {calculateCompleteness(profile).percentage}%</p>
+      <section className="profile-section">
+        <h2 className="profile-section__title">Profile</h2>
+        <p className="profile-section__completeness">Profile completeness: {calculateCompleteness(profile).percentage}%</p>
         {calculateCompleteness(profile).missingFields.length > 0 && (
-          <ul>
+          <ul className="profile-section__missing-fields">
             {calculateCompleteness(profile).missingFields.map((field) => (
               <li key={field}>{field} is missing</li>
             ))}
@@ -69,16 +70,16 @@ function DashboardPage() {
         )}
       </section>
 
-      <section>
-        <h2>Your Applications</h2>
+      <section className="applications-section">
+        <h2 className="applications-section__title">Your Applications</h2>
 
         {applications.length === 0 ? (
-          <p>No applications yet.</p>
+          <p className="applications-section__no-applications">No applications yet.</p>
         ) : (
           applications.map((app) => (
             <div key={app._id} className="card">
-              <h3>{app.roleTitle || "Untitled Role"}</h3>
-              <p>{app.company || "No company listed"}</p>
+              <h3 className="card__title">{app.roleTitle || "Untitled Role"}</h3>
+              <p className="card__company">{app.company || "No company listed"}</p>
             </div>
           ))
         )}

@@ -1,0 +1,58 @@
+.dashboard-page {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
+
+.profile-section {
+  margin-bottom: 40px;
+}
+
+.profile-section__title {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.profile-section__completeness {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.profile-section__missing-fields {
+  list-style: none;
+  padding-left: 20px;
+  color: #666;
+}
+
+.applications-section {
+  margin-bottom: 40px;
+}
+
+.applications-section__title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.applications-section__no-applications {
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.card {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.card__title {
+  font-size: 1.25rem;
+  margin: 0 0 10px 0;
+}
+
+.card__company {
+  font-size: 1rem;
+  color: #666;
+  margin: 0;
+}

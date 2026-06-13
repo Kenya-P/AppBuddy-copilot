@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import * as applicationsApi from "../../services/application.js";
+import "./ApplicationDetailPage.css";
 
 function ApplicationDetailPage() {
   const { id } = useParams();
@@ -102,42 +103,42 @@ function ApplicationDetailPage() {
   if (!application) return <p>Application not found.</p>;
 
 return (
-  <div className="application-page">
-    <button onClick={() => navigate("/applications")}>Back</button>
+  <div className="application-detail-page">
+    <button className="application-detail-page__btn" onClick={() => navigate("/applications")}>Back</button>
 
     {!isEditing ? (
       <>
-        <h1>{application.roleTitle || "Untitled Role"}</h1>
-        <p>{application.company || "No company listed"}</p>
+        <h1 className="application-detail-page__title">{application.roleTitle || "Untitled Role"}</h1>
+        <p className="application-detail-page__company">{application.company || "No company listed"}</p>
 
-        <h2>Matched Keywords</h2>
-        <p>{application.matchedKeywords?.join(", ") || "None"}</p>
+        <h3 className="application-detail-page__section-title">Matched Keywords</h3>
+        <p className="application-detail-page__section-content">{application.matchedKeywords?.join(", ") || "None"}</p>
 
-        <h2>Cover Letter</h2>
-        <pre style={{ whiteSpace: "pre-wrap" }}>{application.coverLetter}</pre>
-        <button onClick={() => copyToClipboard(application.coverLetter)}>Copy Cover Letter</button>
+        <h3 className="application-detail-page__section-title">Cover Letter</h3>
+        <pre className="application-detail-page__cover-letter" style={{ whiteSpace: "pre-wrap" }}>{application.coverLetter}</pre>
+        <button className="application-detail-page__btn" onClick={() => copyToClipboard(application.coverLetter)}>Copy Cover Letter</button>
 
-        <h2>Application Answers</h2>
+        <h3 className="application-detail-page__section-title">Application Answers</h3>
         {application.answers?.map((item, index) => (
           <div key={index}>
-            <h3>{item.question}</h3>
-            <p>{item.answer}</p>
+            <h3 className="application-detail-page__question">{item.question}</h3>
+            <p className="application-detail-page__answer">{item.answer}</p>
             
-            <button onClick={() => copyToClipboard(item.answer)}>Copy Answer</button>
+            <button className="application-detail-page__btn" onClick={() => copyToClipboard(item.answer)}>Copy Answer</button>
           </div>
         ))}
 
-        <button onClick={() => setIsEditing(true)}>Edit Draft</button>
+        <button className="application-detail-page__btn" onClick={() => setIsEditing(true)}>Edit Draft</button>
 
-        <button onClick={handleDelete} disabled={deleting}>
+        <button className="application-detail-page__btn" onClick={handleDelete} disabled={deleting}>
           {deleting ? "Deleting..." : "Delete Draft"}
         </button>
       </>
     ) : (
       <>
-        <h1>Edit Draft</h1>
+        <h2 className="application-detail-page__title">Edit Draft</h2>
 
-        <label>
+        <label className="application-detail-page__label">
           Company
           <input
             name="company"
@@ -146,7 +147,7 @@ return (
           />
         </label>
 
-        <label>
+        <label className="application-detail-page__label">
           Role Title
           <input
             name="roleTitle"
@@ -155,7 +156,7 @@ return (
           />
         </label>
 
-        <label>
+        <label className="application-detail-page__label">
           Cover Letter
           <textarea
             name="coverLetter"
@@ -165,13 +166,14 @@ return (
           />
         </label>
 
-        <h2>Application Answers</h2>
+        <h3 className="application-detail-page__section-title">Application Answers</h3>
 
         {formData.answers.map((item, index) => (
           <div key={index}>
-            <label>
+            <label className="application-detail-page__label">
               Question
               <input
+                className="application-detail-page__input"
                 value={item.question}
                 onChange={(e) =>
                   handleAnswerChange(index, "question", e.target.value)
@@ -179,9 +181,10 @@ return (
               />
             </label>
 
-            <label>
+            <label className="application-detail-page__label">
               Answer
               <textarea
+                className="application-detail-page__textarea"
                 value={item.answer}
                 onChange={(e) =>
                   handleAnswerChange(index, "answer", e.target.value)
@@ -192,11 +195,11 @@ return (
           </div>
         ))}
 
-        <button onClick={handleSaveChanges} disabled={saving}>
+        <button className="application-detail-page__btn" onClick={handleSaveChanges} disabled={saving}>
           {saving ? "Saving..." : "Save Changes"}
         </button>
 
-        <button onClick={() => setIsEditing(false)} disabled={saving}>
+        <button className="application-detail-page__btn" onClick={() => setIsEditing(false)} disabled={saving}>
           Cancel
         </button>
       </>
